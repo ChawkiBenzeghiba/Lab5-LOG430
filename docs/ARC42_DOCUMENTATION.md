@@ -193,53 +193,7 @@ Ce document décrit l'évolution du système multi-magasins (Lab 2) vers une arc
 
 Dans cette section, les différentes vues architecturales basées sur le modèle 4+1 seront présentées.
 
-### 5.1 Vue des Cas d'Utilisation
-
-Cette vue affiche les différents cas d'utilisations implémentés dans le laboratoire 5.
-
-Emplacement dans le projet: docs/UML/vue_cas_utilisation.puml
-
-![Cas d'utilisation](docs/Images/USE CASE UML.png)
-
-### 5.2 Vue de Déploiement
-
-Cette vue décrit le côté physique de l'architecture avec laquelle le système est déployé. Elle montre les conteneurs Dockers et leurs communications.
-
-Emplacement dans le projet: docs/UML/vue_deploiement.puml
-
-![Déploiement](docs/Images/DEPLOIEMENT UML.png)
-
-### 5.3 Vue Implémentation
-
-Cette vue démontre l'organisation du code et des différentes relations entre les composants. On y voit aisément la séparation des couches de la structure microservices.
-
-Emplacement dans le projet: docs/UML/vue_implementation.puml
-
-![Implémentation](docs/Images/IMPLEMENTATION UML.png)
-
-### 5.4 Vue Logique
-
-Cette vue présente le modèle de domaine du système. On y voit les classes modèles, les contrôleurs, les services ainsi que les relations entre elles.
-
-Emplacement dans le projet: docs/UML/vue_logique_classes_MVC.puml
-
-![Logique](docs/Images/LOGIQUE UML.png)
-
-### 5.5 Vue Processus
-
-Voici les vues qui représentent les diagrammes de séquences des cas d'utilisation réalisés dans le laboratoire 5.
-
-Emplacement dans le projet: docs/UML/vue_processus_UC1_migration_microservices.puml
-
-![UC1](docs/Images/PROCESSUS UC1 UML.png)
-
-Emplacement dans le projet: docs/UML/vue_processus_UC2_load_balancing.puml
-
-![UC2](docs/Images/PROCESSUS UC2 UML.png)
-
-Emplacement dans le projet: docs/UML/vue_processus_UC3_observabilite.puml
-
-![UC3](docs/Images/PROCESSUS UC3 UML.png)
+CETTE SECTION SE TROUVE DANS LE ARC42 SOUS FORMAT PDF
 
 ---
 
