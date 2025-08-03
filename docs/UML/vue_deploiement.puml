@@ -1,0 +1,63 @@
+@startuml vue_deploiement
+!theme plain
+skinparam component {
+    BackgroundColor LightBlue
+    BorderColor DarkBlue
+    ArrowColor DarkBlue
+}
+
+title Vue de Déploiement - Architecture Microservices
+
+node "Poste de l'Utilisateur" {
+    component "Navigateur Web" as NW
+}
+
+node "Serveur (Docker Host)" {
+    
+    component "Conteneur Frontend\n(Vue.js/HTML/CSS)" as FE
+    
+    component "Conteneur API Gateway\n(Node.js/Express)" as AG
+    
+    component "Conteneurs Microservices\n(Node.js/Express)" as MS {
+        component "Service Produits" as SP
+        component "Service Clients" as SC
+        component "Service Ventes" as SV
+        component "Service Stock" as ST
+        component "Service Panier (2 instances)" as PA
+        component "Service Commandes" as CM
+    }
+    
+    component "Conteneurs Base de Données\n(PostgreSQL)" as DB {
+        database "DB Produits" as DB1
+        database "DB Clients" as DB2
+        database "DB Ventes" as DB3
+        database "DB Stock" as DB4
+        database "DB Panier" as DB5
+        database "DB Commandes" as DB6
+    }
+    
+}
+
+' Relations Utilisateur
+NW --> FE : HTTP
+
+' Relations Frontend
+FE --> AG : HTTP
+
+' Relations API Gateway
+AG --> SP : HTTP
+AG --> SC : HTTP
+AG --> SV : HTTP
+AG --> ST : HTTP
+AG --> PA : HTTP (Load Balancing)
+AG --> CM : HTTP
+
+' Relations Services vers Bases de Données
+SP --> DB1 : ORM (Sequelize)
+SC --> DB2 : ORM (Sequelize)
+SV --> DB3 : ORM (Sequelize)
+ST --> DB4 : ORM (Sequelize)
+PA --> DB5 : ORM (Sequelize)
+CM --> DB6 : ORM (Sequelize)
+
+@enduml 

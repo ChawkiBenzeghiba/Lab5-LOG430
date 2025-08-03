@@ -1,0 +1,22 @@
+@startuml vue_processus_gerer_stock
+title Vue de Processus - Gérer Stock
+
+actor "Employé Magasin" as EM
+participant "Interface Employé" as IE
+participant "API Gateway" as AG
+participant "stockRoutes.js" as SR
+participant "stockController.js" as SC
+participant "StockCentral (Model)" as SM
+
+EM -> IE : Consulter le stock central
+IE -> AG : GET /api/stock/stock-central
+AG -> SR : Route GET /api/stock/stock-central
+SR -> SC : appeler afficherStock(req, res)
+SC -> SM : StockCentral.findOne()
+SM --> SC : Retourner inventaire central
+SC --> SR : res.json({inventaire})
+SR --> AG : Réponse JSON
+AG --> IE : Réponse JSON
+IE --> EM : Afficher le stock central
+
+@enduml 

@@ -1,0 +1,90 @@
+@startuml vue_implementation
+!theme plain
+skinparam component {
+    BackgroundColor LightBlue
+    BorderColor DarkBlue
+    ArrowColor DarkBlue
+}
+
+title Vue d'Implémentation - Architecture Microservices et Flux API
+
+package "Application Microservices" {
+    component "Frontend Client\n(Vue.js)" as FE
+    component "API Gateway\n(app.js)" as AG
+}
+
+package "Couche Logique - Controllers & Routes" {
+    component "Produit Routes" as PR
+    component "Client Routes" as CR
+    component "Vente Routes" as VR
+    component "Stock Routes" as SR
+    component "Panier Routes" as PAR
+    component "Commande Routes" as COR
+    
+    component "Produit Controller" as PC
+    component "Client Controller" as CC
+    component "Vente Controller" as VC
+    component "Stock Controller" as SC
+    component "Panier Controller" as PAC
+    component "Commande Controller" as COC
+}
+
+package "Couche Données - Models & DB" {
+    component "Produit Model" as PM
+    component "Client Model" as CM
+    component "Vente Model" as VM
+    component "StockCentral Model" as SM
+    component "Panier Model" as PAM
+    component "Commande Model" as COM
+    component "Database Config" as DB
+}
+
+package "Couche Présentation - API JSON" {
+    component "Réponses JSON" as JSON
+}
+
+' Relations Application
+AG --> PR
+AG --> CR
+AG --> VR
+AG --> SR
+AG --> PAR
+AG --> COR
+
+' Relations Routes vers Controllers
+PR --> PC
+CR --> CC
+VR --> VC
+SR --> SC
+PAR --> PAC
+COR --> COC
+
+' Relations Controllers vers Models
+PC --> PM
+CC --> CM
+VC --> VM
+SC --> SM
+PAC --> PAM
+COC --> COM
+
+' Relations Models vers Database
+PM --> DB
+CM --> DB
+VM --> DB
+SM --> DB
+PAM --> DB
+COM --> DB
+
+' Relations vers Présentation
+PC --> JSON
+CC --> JSON
+VC --> JSON
+SC --> JSON
+PAC --> JSON
+COC --> JSON
+DB --> JSON
+
+' Relations Frontend
+FE --> AG : HTTP
+
+@enduml 

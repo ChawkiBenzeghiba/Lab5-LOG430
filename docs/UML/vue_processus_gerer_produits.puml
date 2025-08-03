@@ -1,0 +1,22 @@
+@startuml vue_processus_gerer_produits
+
+title Vue de Processus - Gérer Produits
+
+actor "Client Web" as CW
+participant "Frontend Client" as FE
+participant "API Gateway" as AG
+participant "produitRoutes.js" as PR
+participant "produitController.js" as PC
+participant "Produit (Model)" as PM
+
+CW -> FE : Demande de consultation des produits
+FE -> AG : GET /api/produits
+AG -> PR : Route GET /api/produits
+PR -> PC : appeler getProduitsByMagasin(req, res)
+PC -> PM : Produit.findAll()
+PM --> PC : Retourner liste des produits
+PC --> PR : res.json({data: produits})
+PR --> AG : Réponse JSON
+AG --> FE : Réponse JSON
+FE --> CW : Afficher les produits
+@enduml 

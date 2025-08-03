@@ -1,0 +1,43 @@
+@startuml vue_processus_gerer_ventes
+title Vue de Processus - Gérer Ventes
+
+actor "Employé Magasin" as EM
+participant "Interface Employé" as IE
+participant "API Gateway" as AG
+participant "venteRoutes.js" as VR
+participant "venteController.js" as VC
+participant "Vente (Model)" as VM
+participant "stockController.js" as SC
+participant "StockCentral (Model)" as SM
+
+EM -> IE : Enregistrer une vente
+IE -> AG : POST /api/ventes/magasin/:id/vente
+AG -> VR : Route POST /api/ventes/magasin/:id/vente
+VR -> VC : appeler enregistrerVente(req, res)
+
+VC -> SC : Vérifier stock disponible
+SC -> SM : StockCentral.findOne()
+SM --> SC : Retourner inventaire
+SC --> VC : Retourner quantité disponible
+
+alt Stock suffisant
+    VC -> VM : Vente.create({magasinId, produitId, quantite, prixUnitaire, type: 'vente'})
+    VM --> VC : Retourner vente créée
+    
+    VC -> SC : Diminuer stock
+    SC -> SM : StockCentral.update({inventaire: nouvelleQuantite})
+    SM --> SC : Confirmer mise à jour
+    SC --> VC : Confirmer diminution
+    
+    VC --> VR : res.json({success: true, vente})
+    VR --> AG : Réponse JSON
+    AG --> IE : Réponse JSON
+    IE --> EM : Afficher confirmation de vente
+else Stock insuffisant
+    VC --> VR : res.json({success: false, error: "Stock insuffisant"})
+    VR --> AG : Réponse JSON
+    AG --> IE : Réponse JSON
+    IE --> EM : Afficher message d'erreur
+end
+
+@enduml 

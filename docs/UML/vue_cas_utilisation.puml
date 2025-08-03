@@ -1,0 +1,77 @@
+@startuml vue_cas_utilisation
+!theme plain
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor LightBlue
+    BorderColor DarkBlue
+    ArrowColor DarkBlue
+}
+
+title Vue des Cas d'Utilisation - Architecture Microservices
+
+actor "Client Web" as CW
+actor "Employé Magasin" as EM
+
+package "Frontend Client" {
+    usecase "Gérer Produits" as UC1
+    usecase "Gérer Panier" as UC2
+    usecase "Valider Commande" as UC3
+}
+
+package "Service Produits" {
+    usecase "Consulter Produits" as UC4
+    usecase "Rechercher Produit" as UC5
+}
+
+package "Service Panier" {
+    usecase "Gérer Panier" as UC6
+    usecase "Vider Panier" as UC7
+}
+
+package "Service Stock" {
+    usecase "Gérer Stock" as UC8
+    usecase "Diminuer Stock" as UC9
+}
+
+package "Service Commandes" {
+    usecase "Valider Commande" as UC10
+    usecase "Consulter Commandes" as UC11
+}
+
+package "Service Ventes" {
+    usecase "Gérer Ventes" as UC12
+}
+
+' Relations Client Web
+CW --> UC1
+CW --> UC2
+CW --> UC3
+
+' Relations Employé Magasin
+EM --> UC8
+EM --> UC12
+
+' Relations Service Produits
+UC1 ..> UC4
+UC1 ..> UC5
+
+' Relations Service Panier
+UC2 ..> UC6
+UC3 ..> UC7
+
+' Relations Service Stock
+UC2 ..> UC9
+UC6 ..> UC9
+
+' Relations Service Commandes
+UC3 ..> UC10
+UC3 ..> UC11
+
+' Relations Service Ventes
+UC12 ..> UC8
+
+' Notes explicatives
+note right of UC9 : Diminution auto\nlors ajout panier
+note right of UC10 : Vide panier\naprès validation
+
+@enduml 

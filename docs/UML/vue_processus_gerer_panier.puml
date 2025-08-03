@@ -1,0 +1,44 @@
+@startuml vue_processus_gerer_panier
+
+title Vue de Processus - Gérer Panier
+
+actor "Client Web" as CW
+participant "Frontend Client" as FE
+participant "API Gateway" as AG
+participant "panierRoutes.js" as PR
+participant "panierController.js" as PC
+participant "Panier (Model)" as PM
+participant "stockController.js" as SC
+participant "StockCentral (Model)" as SM
+
+CW -> FE : Sélectionner produit et quantité
+FE -> AG : POST /api/panier/client/1/ajouter
+AG -> PR : Route POST /api/panier/client/:id/ajouter
+PR -> PC : appeler ajouterProduit(req, res)
+
+PC -> SC : Vérifier stock disponible
+SC -> SM : StockCentral.findOne()
+SM --> SC : Retourner inventaire
+SC --> PC : Retourner quantité disponible
+
+alt Stock suffisant
+    PC -> PM : Panier.create({clientId, produitId, quantite, prixUnitaire})
+    PM --> PC : Retourner item créé
+    
+    PC -> SC : Diminuer stock
+    SC -> SM : StockCentral.update({inventaire: nouvelleQuantite})
+    SM --> SC : Confirmer mise à jour
+    SC --> PC : Confirmer diminution
+    
+    PC --> PR : res.json({success: true})
+    PR --> AG : Réponse JSON
+    AG --> FE : Réponse JSON
+    FE --> CW : Afficher confirmation d'ajout
+else Stock insuffisant
+    PC --> PR : res.json({success: false, error: "Stock insuffisant"})
+    PR --> AG : Réponse JSON
+    AG --> FE : Réponse JSON
+    FE --> CW : Afficher message d'erreur
+end
+
+@enduml 

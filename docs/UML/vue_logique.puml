@@ -1,0 +1,153 @@
+@startuml vue_logique
+!theme plain
+skinparam class {
+    BackgroundColor LightBlue
+    BorderColor DarkBlue
+    ArrowColor DarkBlue
+}
+
+title Vue Logique - Architecture MVC Microservices
+
+package "Vue" {
+    class FrontendClient {
+        +loadProducts()
+        +searchProducts()
+        +addToCart()
+        +updateCartQuantity()
+        +removeFromCart()
+        +checkout()
+        +loadOrders()
+    }
+}
+
+package "Controllers" {
+    class produitController {
+        +getProduitsByMagasin(req, res)
+        +rechercherProduit(req, res)
+        +getProduitById(req, res)
+        +createProduit(req, res)
+    }
+    
+    class panierController {
+        +ajouterProduit(req, res)
+        +modifierQuantite(req, res)
+        +supprimerProduit(req, res)
+        +getPanier(req, res)
+        +viderPanier(req, res)
+    }
+    
+    class stockController {
+        +afficherStock(req, res)
+        +diminuerStock(req, res)
+        +ajouterStock(req, res)
+        +getInventaireMagasin(req, res)
+    }
+    
+    class commandeController {
+        +validerCommande(req, res)
+        +getCommandeById(req, res)
+        +getCommandesByClient(req, res)
+        +updateStatutCommande(req, res)
+        +annulerCommande(req, res)
+    }
+    
+    class venteController {
+        +enregistrerVente(req, res)
+        +faireRetour(req, res)
+        +getVentesByMagasin(req, res)
+        +getVenteById(req, res)
+    }
+    
+    class clientController {
+        +createClient(req, res)
+        +authenticateClient(req, res)
+        +getClientById(req, res)
+        +updateClient(req, res)
+        +deactivateClient(req, res)
+    }
+}
+
+package "Modeles" {
+    class Produit {
+        +Integer id
+        +String nom
+        +String description
+        +Decimal prix
+        +String categorie
+        +String codeProduit
+        +Boolean actif
+    }
+    
+    class Panier {
+        +Integer id
+        +Integer clientId
+        +Integer produitId
+        +Integer quantite
+        +Decimal prixUnitaire
+        +Decimal prixTotal
+        +Date dateAjout
+        +Boolean actif
+    }
+    
+    class StockCentral {
+        +Integer id
+        +JSONB inventaire
+    }
+    
+    class Commande {
+        +Integer id
+        +Integer clientId
+        +String numeroCommande
+        +Decimal montantTotal
+        +String statut
+        +String adresseLivraison
+        +String adresseFacturation
+        +String methodePaiement
+        +Date dateCommande
+        +Date dateLivraison
+        +String notes
+    }
+    
+    class Vente {
+        +Integer id
+        +Integer magasinId
+        +Integer produitId
+        +Integer quantite
+        +Decimal prixUnitaire
+        +Date dateVente
+        +String type
+    }
+    
+    class Client {
+        +Integer id
+        +String nom
+        +String email
+        +String adresse
+        +String telephone
+        +Boolean actif
+    }
+}
+
+' Relations Vue vers Controllers
+FrontendClient ..> produitController
+FrontendClient ..> panierController
+FrontendClient ..> commandeController
+
+' Relations Controllers vers Modeles
+produitController --> Produit
+panierController --> Panier
+panierController --> Produit
+stockController --> StockCentral
+stockController --> Produit
+commandeController --> Commande
+venteController --> Vente
+venteController --> Produit
+clientController --> Client
+
+' Relations entre Modeles
+Panier --> Produit : 0..*
+Commande <-- Client : 0..*
+Vente --> Produit : 0..*
+Vente <-- Client : 0..*
+
+@enduml 

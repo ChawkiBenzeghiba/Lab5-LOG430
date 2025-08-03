@@ -1,0 +1,38 @@
+@startuml vue_processus_valider_commande
+
+title Vue de Processus - Valider Commande
+
+actor "Client Web" as CW
+participant "Frontend Client" as FE
+participant "API Gateway" as AG
+participant "commandeRoutes.js" as CR
+participant "commandeController.js" as CC
+participant "Commande (Model)" as CM
+participant "panierRoutes.js" as PR
+participant "panierController.js" as PC
+participant "Panier (Model)" as PM
+
+CW -> FE : Cliquer "Valider Commande"
+FE -> AG : POST /api/commandes/client/:id/valider
+AG -> CR : Route POST /api/commandes/client/:id/valider
+CR -> CC : appeler validerCommande(req, res)
+
+CC -> CM : Commande.create({clientId, items, statut: 'en_attente'})
+CM --> CC : Retourner commande créée
+
+CC -> PR : Vider le panier
+PR -> PC : appeler viderPanier(req, res)
+PC -> PM : Panier.destroy({where: {clientId: 1}})
+PM --> PC : Confirmer suppression
+PC --> PR : res.json({success: true})
+PR --> CC : Confirmer vidage
+
+CC -> CM : Commande.update({numeroCommande: generateNumber()})
+CM --> CC : Confirmer mise à jour
+
+CC --> CR : res.json({success: true, numeroCommande})
+CR --> AG : Réponse JSON
+AG --> FE : Réponse JSON
+FE --> CW : Afficher confirmation avec numéro
+
+@enduml 
